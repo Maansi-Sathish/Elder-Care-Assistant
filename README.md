@@ -18,6 +18,7 @@ Key Features:
 This project was developed to provide a practical solution for a common challenge in home-based elder care, demonstrating a simple yet powerful application of front-end web technologies. It is a standalone application that can be run directly from a browser.
 
 Tech Stack
+
 HTML5: The core markup language for structuring the application's content.
 
 Tailwind CSS: A utility-first CSS framework for building a responsive and modern user interface directly in the HTML.

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elder Care Assistant</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons (e.g., checkmark, cross) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles to override or extend Tailwind, if necessary */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #E8F5E9; /* Light Green background */
+            color: #333333; /* Dark Grey for text */
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Specific styles for the tab content to ensure it fills space */
+        .tab-content {
+            display: none;
+            height: 100%; /* Ensure tab content takes full height */
+            overflow-y: auto; /* Enable scrolling for tab content if needed */
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Custom modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-green-50 min-h-screen flex flex-col">
+
+    <div class="container mx-auto p-4 flex-grow flex flex-col">
+        <h1 class="text-3xl font-bold text-center text-green-700 mb-6 rounded-lg py-3 bg-green-200 shadow-md">
+            Elder Care Assistant
+        </h1>
+
+        <!-- Tab Navigation -->
+        <div class="flex bg-green-600 rounded-t-lg shadow-md">
+            <button class="tab-button flex-1 py-3 px-4 text-white font-semibold rounded-tl-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200" data-tab="addMedicine">Add Medicine</button>
+            <button class="tab-button flex-1 py-3 px-4 text-white font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200" data-tab="appointments">Appointments</button>
+            <button class="tab-button flex-1 py-3 px-4 text-white font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200" data-tab="medicineChecklist">Medicine Checklist</button>
+            <button class="tab-button flex-1 py-3 px-4 text-white font-semibold rounded-tr-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200" data-tab="weeklyTable">Weekly Table</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="bg-white p-6 rounded-b-lg shadow-lg flex-grow overflow-hidden">
+
+            <!-- Add Medicine Tab -->
+            <div id="addMedicine" class="tab-content active h-full">
+                <h2 class="text-xl font-semibold text-green-800 mb-4">Add New Medicine</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="medName" class="block text-sm font-medium text-gray-700 mb-1">Medicine Name</label>
+                        <input type="text" id="medName" class="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label for="medDose" class="block text-sm font-medium text-gray-700 mb-1">Dose</label>
+                        <input type="text" id="medDose" class="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label for="medTimes" class="block text-sm font-medium text-gray-700 mb-1">Times Per Day</label>
+                        <input type="number" id="medTimes" min="1" value="1" class="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label for="medDays" class="block text-sm font-medium text-gray-700 mb-1">Days to Take (comma-separated, e.g., Monday, Tuesday)</label>
+                        <input type="text" id="medDays" class="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                    </div>
+                </div>
+                <button id="addMedicineBtn" class="mt-6 w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200">Add Medicine</button>
+            </div>
+
+            <!-- Appointments Tab -->
+            <div id="appointments" class="tab-content h-full">
+                <h2 class="text-xl font-semibold text-green-800 mb-4">Manage Appointments</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="apptDoctor" class="block text-sm font-medium text-gray-700 mb-1">Doctor Name</label>
+                        <input type="text" id="apptDoctor" class="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label for="apptDate" class="block text-sm font-medium text-gray-700 mb-1">Date (YYYY-MM-DD)</label>
+                        <input type="date" id="apptDate" class="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label for="apptTime" class="block text-sm font-medium text-gray-700 mb-1">Time (HH:MM)</label>
+                        <input type="time" id="apptTime" class="w-full p-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                    </div>
+                </div>
+                <button id="addAppointmentBtn" class="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200 mb-4">Add Appointment</button>
+
+                <h3 class="text-lg font-medium text-gray-800 mb-2">Upcoming Appointments:</h3>
+                <ul id="appointmentList" class="border border-gray-300 rounded-md p-3 bg-gray-50 max-h-48 overflow-y-auto">
+                    <!-- Appointments will be listed here by JS -->
+                </ul>
+            </div>
+
+            <!-- Medicine Checklist Tab -->
+            <div id="medicineChecklist" class="tab-content h-full">
+                <h2 class="text-xl font-semibold text-green-800 mb-4">Medicine Checklist</h2>
+                <div id="checklistContainer" class="space-y-4 max-h-full overflow-y-auto pr-2">
+                    <!-- Checkboxes will be dynamically generated here -->
+                </div>
+            </div>
+
+            <!-- Weekly Table Tab -->
+            <div id="weeklyTable" class="tab-content h-full">
+                <h2 class="text-xl font-semibold text-green-800 mb-4">Weekly Medicine Schedule</h2>
+                <div class="overflow-x-auto max-h-full">
+                    <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+                        <thead>
+                            <tr class="bg-green-600 text-white">
+                                <th class="py-2 px-4 text-left rounded-tl-lg">Medicine Name</th>
+                                <th class="py-2 px-4 text-center">Monday</th>
+                                <th class="py-2 px-4 text-center">Tuesday</th>
+                                <th class="py-2 px-4 text-center">Wednesday</th>
+                                <th class="py-2 px-4 text-center">Thursday</th>
+                                <th class="py-2 px-4 text-center">Friday</th>
+                                <th class="py-2 px-4 text-center">Saturday</th>
+                                <th class="py-2 px-4 text-center rounded-tr-lg">Sunday</th>
+                            </tr>
+                        </thead>
+                        <tbody id="weeklyTableBody">
+                            <!-- Table rows will be dynamically generated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Caregiver Notification Button -->
+        <button id="notifyCaregiverBtn" class="mt-6 w-full bg-red-500 text-white py-3 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 text-lg font-bold shadow-md">
+            Check Today's Status / Notify Caregiver
+        </button>
+    </div>
+
+    <!-- Custom Message Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeModalBtn">&times;</span>
+            <p id="modalMessage" class="text-lg font-medium mb-4"></p>
+            <button class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600" onclick="document.getElementById('messageModal').style.display='none'">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Data Storage ---
+        let medicines = [];
+        let appointments = [];
+        // {med_name: [true/false, true/false, ...]} for each dose
+        let takenToday = {};
+
+        const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+        // --- DOM Elements ---
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        const medNameInput = document.getElementById('medName');
+        const medDoseInput = document.getElementById('medDose');
+        const medTimesInput = document.getElementById('medTimes');
+        const medDaysInput = document.getElementById('medDays');
+        const addMedicineBtn = document.getElementById('addMedicineBtn');
+
+        const apptDoctorInput = document.getElementById('apptDoctor');
+        const apptDateInput = document.getElementById('apptDate');
+        const apptTimeInput = document.getElementById('apptTime');
+        const addAppointmentBtn = document.getElementById('addAppointmentBtn');
+        const appointmentList = document.getElementById('appointmentList');
+
+        const checklistContainer = document.getElementById('checklistContainer');
+        const weeklyTableBody = document.getElementById('weeklyTableBody');
+        const notifyCaregiverBtn = document.getElementById('notifyCaregiverBtn');
+
+        const messageModal = document.getElementById('messageModal');
+        const modalMessage = document.getElementById('modalMessage');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        // --- Utility Functions ---
+
+        /**
+         * Displays a custom message modal.
+         * @param {string} type - 'success', 'warning', 'error', 'info' (for styling)
+         * @param {string} message - The message to display.
+         */
+        function showMessage(type, message) {
+            modalMessage.textContent = message;
+            modalMessage.className = 'text-lg font-medium mb-4'; // Reset classes
+            if (type === 'success') {
+                modalMessage.classList.add('text-green-600');
+            } else if (type === 'warning') {
+                modalMessage.classList.add('text-yellow-600');
+            } else if (type === 'error') {
+                modalMessage.classList.add('text-red-600');
+            } else { // info
+                modalMessage.classList.add('text-gray-800');
+            }
+            messageModal.style.display = 'flex'; // Show the modal
+        }
+
+        // Close modal when close button is clicked
+        closeModalBtn.onclick = function() {
+            messageModal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside of the modal content
+        window.onclick = function(event) {
+            if (event.target == messageModal) {
+                messageModal.style.display = 'none';
+            }
+        }
+
+        /**
+         * Gets the current day of the week as a string (e.g., "Monday").
+         * @returns {string} The current day name.
+         */
+        function getCurrentDayName() {
+            const date = new Date();
+            // getDay() returns 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+            // Our daysOfWeek array starts with Monday, so adjust index
+            return daysOfWeek[date.getDay() === 0 ? 6 : date.getDay() - 1];
+        }
+
+        // --- Tab Switching Logic ---
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Deactivate all tabs and buttons
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('bg-green-700', 'font-bold');
+                    btn.classList.add('bg-green-600');
+                });
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                // Activate clicked tab and button
+                const targetTabId = button.dataset.tab;
+                document.getElementById(targetTabId).classList.add('active');
+                button.classList.add('bg-green-700', 'font-bold');
+                button.classList.remove('bg-green-600');
+
+                // Re-render content when switching to relevant tabs
+                if (targetTabId === 'medicineChecklist') {
+                    updateChecklist();
+                } else if (targetTabId === 'weeklyTable') {
+                    updateTable();
+                } else if (targetTabId === 'appointments') {
+                    renderAppointments();
+                }
+            });
+        });
+
+        // Initialize first tab as active
+        tabButtons[0].classList.add('bg-green-700', 'font-bold');
+        tabContents[0].classList.add('active');
+
+        // --- Add Medicine Functionality ---
+        addMedicineBtn.addEventListener('click', () => {
+            const name = medNameInput.value.trim();
+            const dose = medDoseInput.value.trim();
+            const times = parseInt(medTimesInput.value.trim());
+            const daysInput = medDaysInput.value.trim();
+            const days = daysInput.split(',').map(d => d.trim().charAt(0).toUpperCase() + d.trim().slice(1).toLowerCase()).filter(d => d);
+
+            if (!name || !dose || !daysInput || isNaN(times) || times <= 0) {
+                showMessage('warning', 'Please fill all medicine details correctly (Times Per Day must be a positive number).');
+                return;
+            }
+            if (!days.every(d => daysOfWeek.includes(d))) {
+                showMessage('warning', 'Please enter valid days (e.g., Monday, Tuesday).');
+                return;
+            }
+
+            medicines.push({ name, dose, times, days });
+            takenToday[name] = Array(times).fill(false); // Initialize all doses as not taken
+
+            medNameInput.value = '';
+            medDoseInput.value = '';
+            medTimesInput.value = '1';
+            medDaysInput.value = '';
+
+            showMessage('success', `${name} added successfully!`);
+            // Update checklist and table immediately after adding medicine, regardless of current tab
+            updateChecklist();
+            updateTable();
+        });
+
+        // --- Add Appointment Functionality ---
+        addAppointmentBtn.addEventListener('click', () => {
+            const doctor = apptDoctorInput.value.trim();
+            const date = apptDateInput.value.trim();
+            const time = apptTimeInput.value.trim();
+
+            if (!doctor || !date || !time) {
+                showMessage('warning', 'Please fill all appointment details.');
+                return;
+            }
+
+            // Basic date/time format validation
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) {
+                showMessage('warning', 'Date must be YYYY-MM-DD and Time must be HH:MM.');
+                return;
+            }
+
+            appointments.push({ doctor, date, time });
+
+            apptDoctorInput.value = '';
+            apptDateInput.value = '';
+            apptTimeInput.value = '';
+
+            showMessage('success', 'Appointment added successfully!');
+            renderAppointments(); // Update the displayed list of appointments
+        });
+
+        /**
+         * Renders the list of appointments in the Appointments tab.
+         */
+        function renderAppointments() {
+            appointmentList.innerHTML = ''; // Clear existing list
+            if (appointments.length === 0) {
+                appointmentList.innerHTML = '<li class="text-gray-500 italic">No appointments added yet.</li>';
+                return;
+            }
+            appointments.forEach(appt => {
+                const li = document.createElement('li');
+                li.className = 'p-2 border-b border-gray-200 last:border-b-0 text-gray-800';
+                li.textContent = `${appt.doctor} on ${appt.date} at ${appt.time}`;
+                appointmentList.appendChild(li);
+            });
+        }
+
+        // --- Medicine Checklist Functionality ---
+        /**
+         * Dynamically generates the medicine checklist with checkboxes.
+         */
+        function updateChecklist() {
+            checklistContainer.innerHTML = ''; // Clear existing checklist
+
+            if (medicines.length === 0) {
+                checklistContainer.innerHTML = '<p class="text-gray-500 italic">No medicines added yet. Add some in the "Add Medicine" tab.</p>';
+                return;
+            }
+
+            medicines.forEach(med => {
+                const medDiv = document.createElement('div');
+                medDiv.className = 'bg-gray-100 p-4 rounded-lg shadow-sm border border-gray-200';
+
+                const medNameHeader = document.createElement('h3');
+                medNameHeader.className = 'text-md font-semibold text-green-700 mb-2';
+                medNameHeader.textContent = `${med.name} - ${med.dose} (${med.times} times daily)`;
+                medDiv.appendChild(medNameHeader);
+
+                // Ensure takenToday entry exists for this medicine
+                if (!takenToday[med.name] || takenToday[med.name].length !== med.times) {
+                    takenToday[med.name] = Array(med.times).fill(false);
+                }
+
+                for (let i = 0; i < med.times; i++) {
+                    const checkboxDiv = document.createElement('div');
+                    checkboxDiv.className = 'flex items-center mb-1';
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = `med-${med.name}-${i}`;
+                    checkbox.className = 'form-checkbox h-4 w-4 text-green-600 rounded focus:ring-green-500';
+                    checkbox.checked = takenToday[med.name][i]; // Set initial state
+
+                    // Event listener for checkbox change
+                    checkbox.addEventListener('change', (event) => {
+                        takenToday[med.name][i] = event.target.checked;
+                        updateTable(); // Update weekly table immediately
+                    });
+
+                    const label = document.createElement('label');
+                    label.htmlFor = `med-${med.name}-${i}`;
+                    label.className = 'ml-2 text-gray-700 cursor-pointer';
+                    label.textContent = `Dose ${i + 1}`;
+
+                    checkboxDiv.appendChild(checkbox);
+                    checkboxDiv.appendChild(label);
+                    medDiv.appendChild(checkboxDiv);
+                }
+                checklistContainer.appendChild(medDiv);
+            });
+        }
+
+        // --- Weekly Table Functionality ---
+        /**
+         * Dynamically generates and updates the weekly schedule table.
+         */
+        function updateTable() {
+            weeklyTableBody.innerHTML = ''; // Clear existing rows
+
+            const currentDay = getCurrentDayName();
+
+            if (medicines.length === 0) {
+                const row = weeklyTableBody.insertRow();
+                const cell = row.insertCell();
+                cell.colSpan = daysOfWeek.length + 1;
+                cell.className = 'py-3 px-4 text-center text-gray-500 italic';
+                cell.textContent = 'No medicines added yet.';
+                return;
+            }
+
+            medicines.forEach(med => {
+                const row = weeklyTableBody.insertRow();
+                row.className = 'border-b border-gray-200 last:border-b-0';
+
+                const nameCell = row.insertCell();
+                nameCell.className = 'py-2 px-4 text-left font-medium text-gray-800';
+                nameCell.textContent = med.name;
+
+                const allDosesTaken = takenToday[med.name] ? takenToday[med.name].every(doseStatus => doseStatus) : false;
+
+                daysOfWeek.forEach(day => {
+                    const cell = row.insertCell();
+                    cell.className = 'py-2 px-4 text-center';
+
+                    if (med.days.includes(day)) { // Medicine is scheduled for this day
+                        if (day === currentDay) {
+                            if (allDosesTaken) {
+                                cell.innerHTML = '<i class="fas fa-check-circle text-green-600"></i> Taken';
+                                cell.classList.add('font-bold');
+                            } else {
+                                cell.innerHTML = '<i class="fas fa-times-circle text-red-600"></i> Missed';
+                                cell.classList.add('font-bold');
+                            }
+                        } else {
+                            // For other scheduled days, just indicate it's scheduled
+                            cell.innerHTML = '<i class="fas fa-circle text-gray-500 text-xs"></i>'; // A small dot
+                            cell.title = 'Scheduled';
+                        }
+                    } else { // Medicine is NOT scheduled for this day
+                        cell.textContent = '-';
+                        cell.classList.add('text-gray-400', 'italic');
+                    }
+                });
+            });
+        }
+
+        // --- Caregiver Notification Functionality ---
+        notifyCaregiverBtn.addEventListener('click', () => {
+            const missed = [];
+            medicines.forEach(med => {
+                // Check if any dose for the medicine is NOT taken today
+                if (takenToday[med.name] && !takenToday[med.name].every(doseStatus => doseStatus)) {
+                    missed.push(med.name);
+                }
+            });
+
+            if (missed.length > 0) {
+                showMessage('error', `Medicine(s) not taken today: ${missed.join(', ')}. Notifying caregiver... (This is a placeholder notification)`);
+                console.log(`Caregiver Notification (${new Date().toLocaleString()}) - Missed Medicines:`, missed);
+                // In a real application, you'd integrate with an actual notification service (SMS, email API) here.
+            } else {
+                showMessage('success', 'All scheduled medicines taken today. Good job!');
+            }
+        });
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial render of all dynamic content
+            updateChecklist();
+            updateTable();
+            renderAppointments();
+        });
+    </script>
+</body>
+</html>
